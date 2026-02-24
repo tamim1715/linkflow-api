@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"errors"
+	"github.com/tamim447/internal/constants"
 	"github.com/tamim447/internal/domain"
 	"github.com/tamim447/internal/repository"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -65,7 +66,7 @@ func (r *TokenRepo) Find(token string) (*domain.MagicLinkToken, error) {
 	var doc domain.MagicLinkToken
 
 	err := r.Collection.FindOne(context.TODO(), map[string]any{
-		"token": token,
+		constants.Token: token,
 	}).Decode(&doc)
 
 	if err == mongo.ErrNoDocuments {
@@ -78,7 +79,7 @@ func (r *TokenRepo) Find(token string) (*domain.MagicLinkToken, error) {
 func (r *TokenRepo) MarkUsed(token string) error {
 	_, err := r.Collection.UpdateOne(
 		context.TODO(),
-		map[string]any{"token": token},
+		map[string]any{constants.Token: token},
 		map[string]any{
 			"$set": map[string]any{"used": true},
 		},

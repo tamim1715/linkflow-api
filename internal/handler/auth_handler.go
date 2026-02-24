@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/tamim447/internal/constants"
 	"github.com/tamim447/internal/service"
 )
 
@@ -45,12 +46,12 @@ func (h *AuthHandler) RequestLink(c echo.Context) error {
 
 func (h *AuthHandler) Verify(c echo.Context) error {
 
-	token := c.QueryParam("token")
+	token := c.QueryParam(constants.Token)
 
 	jwtToken, err := h.Auth.Verify(token)
 	if err != nil {
 		return c.JSON(401, map[string]string{"error": err.Error()})
 	}
 
-	return c.JSON(200, map[string]string{"token": jwtToken})
+	return c.JSON(200, map[string]string{constants.Token: jwtToken})
 }
