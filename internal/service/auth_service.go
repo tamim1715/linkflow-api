@@ -34,6 +34,9 @@ func (s *AuthService) RequestMagicLink(emailAddr string) error {
 	// 3. Generate token
 	token := s.TokenGen.Generate(user.ID)
 
+	// Invalidate previous unused tokens
+	s.Tokens.InvalidateUserTokens(user.ID)
+
 	// 4. Save token
 	if err := s.Tokens.Save(token); err != nil {
 		return err

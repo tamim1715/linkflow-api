@@ -44,7 +44,10 @@ func (s *Server) RegisterRoutes() {
 	api := s.Echo.Group(constants.APIPrefix)
 
 	auth := api.Group(constants.AuthPrefix)
-	auth.POST(constants.RequestLinkPrefix, s.AuthHandler.RequestLink)
+	auth.POST(constants.RequestLinkPrefix,
+		s.AuthHandler.RequestLink,
+		middleware.AuthRateLimiter(),
+	)
 	auth.GET(constants.VerifyPrefix, s.AuthHandler.Verify)
 
 	feedback := api.Group(constants.FeedbackPrefix)

@@ -1,5 +1,7 @@
 package constants
 
+import "time"
+
 const (
 	// App
 	AppName = "LinkFlow"
@@ -28,4 +30,8 @@ const (
 
 	// Extra
 	Token = "token"
+
+	// Rate limit
+	AuthRateLimitRequests = 5
+	AuthRateLimitWindow   = time.Minute // minutes
 )

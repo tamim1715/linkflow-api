@@ -7,6 +7,8 @@ import (
 	"github.com/tamim447/internal/domain"
 	"github.com/tamim447/internal/repository"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 )
 
 var ErrNotFound = errors.New("not found")
@@ -51,9 +53,31 @@ type TokenRepo struct {
 	Collection *mongo.Collection
 }
 
+//func NewMongoTokenRepository(db *mongo.Database) repository.TokenRepository {
+//	return &TokenRepo{
+//		Collection: db.Collection("magic_link_tokens"),
+//	}
+//}
+
 func NewMongoTokenRepository(db *mongo.Database) repository.TokenRepository {
+
+	collection := db.Collection(constants.MagicLinkTokenCollection)
+
+	indexModel := mongo.IndexModel{
+		Keys: map[string]int{
+			"expiresAt": 1,
+		},
+		Options: options.Index().
+			SetExpireAfterSeconds(0), // expire exactly at expiresAt
+	}
+
+	_, err := collection.Indexes().CreateOne(context.Background(), indexModel)
+	if err != nil {
+		log.Println("Failed to create TTL index:", err)
+	}
+
 	return &TokenRepo{
-		Collection: db.Collection("magic_link_tokens"),
+		Collection: collection,
 	}
 }
 
@@ -82,6 +106,24 @@ func (r *TokenRepo) MarkUsed(token string) error {
 		map[string]any{constants.Token: token},
 		map[string]any{
 			"$set": map[string]any{"used": true},
+		},
+	)
+
+	return err
+}
+
+func (r *TokenRepo) InvalidateUserTokens(userID string) error {
+
+	_, err := r.Collection.UpdateMany(
+		context.TODO(),
+		map[string]any{
+			"userId": userID,
+			"used":   false,
+		},
+		map[string]any{
+			"$set": map[string]any{
+				"used": true,
+			},
 		},
 	)
 
