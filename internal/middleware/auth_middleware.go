@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/tamim447/internal/constants"
 	"github.com/tamim447/internal/service"
 	"net/http"
 	"strings"
@@ -10,41 +11,6 @@ import (
 type contextKey string
 
 const UserIDKey contextKey = "userId"
-
-//type AuthMiddleware struct {
-//	Secret string
-//}
-//
-//func (m *AuthMiddleware) RequireAuth(next http.HandlerFunc) http.HandlerFunc {
-//
-//	return func(w http.ResponseWriter, r *http.Request) {
-//
-//		authHeader := r.Header.Get("Authorization")
-//		if authHeader == "" {
-//			http.Error(w, "missing authorization header", http.StatusUnauthorized)
-//			return
-//		}
-//
-//		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
-//
-//		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-//			return []byte(m.Secret), nil
-//		})
-//
-//		if err != nil || !token.Valid {
-//			http.Error(w, "invalid token", http.StatusUnauthorized)
-//			return
-//		}
-//
-//		claims := token.Claims.(jwt.MapClaims)
-//
-//		userID := claims["userId"].(string)
-//
-//		ctx := context.WithValue(r.Context(), UserIDKey, userID)
-//
-//		next(w, r.WithContext(ctx))
-//	}
-//}
 
 type AuthMiddleware struct {
 	JWT *service.JWTService
@@ -58,18 +24,18 @@ func (m *AuthMiddleware) RequireJWT(next echo.HandlerFunc) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 
-		authHeader := c.Request().Header.Get("Authorization")
+		authHeader := c.Request().Header.Get(constants.AuthorizationHeader)
 		if authHeader == "" {
 			return c.JSON(http.StatusUnauthorized,
-				map[string]string{"error": "missing token"})
+				map[string]string{constants.Error: constants.ErrMissingToken})
 		}
 
-		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+		tokenString := strings.TrimPrefix(authHeader, constants.BearerPrefix)
 
 		userID, err := m.JWT.Validate(tokenString)
 		if err != nil {
 			return c.JSON(http.StatusUnauthorized,
-				map[string]string{"error": "invalid token"})
+				map[string]string{constants.Error: constants.ErrInvalidToken})
 		}
 
 		c.Set("userID", userID)

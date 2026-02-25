@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"github.com/tamim447/internal/constants"
 	"github.com/tamim447/internal/domain"
 	"github.com/tamim447/internal/repository"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,7 +14,7 @@ type FeedbackRepo struct {
 
 func NewMongoFeedbackRepository(db *mongo.Database) repository.FeedbackRepository {
 	return &FeedbackRepo{
-		Collection: db.Collection("feedbacks"),
+		Collection: db.Collection(constants.FeedbackCollection),
 	}
 }
 

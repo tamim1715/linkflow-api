@@ -13,6 +13,17 @@ type FeedbackService struct {
 	Slack slack.Client
 }
 
+func NewFeedbackService(
+	feedbackRepo repository.FeedbackRepository,
+	slackMockClient slack.Client,
+) *FeedbackService {
+
+	return &FeedbackService{
+		Repo:  feedbackRepo,
+		Slack: slackMockClient,
+	}
+}
+
 func (s *FeedbackService) Submit(userID string, message string) error {
 
 	feedback := &domain.Feedback{

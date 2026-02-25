@@ -18,6 +18,23 @@ type AuthService struct {
 	JWT      *JWTService
 }
 
+func NewAuthService(
+	users repository.UserRepository,
+	tokens repository.TokenRepository,
+	tokenGen *TokenService,
+	jwt *JWTService,
+	email email.Sender,
+) *AuthService {
+
+	return &AuthService{
+		Users:    users,
+		Tokens:   tokens,
+		TokenGen: tokenGen,
+		JWT:      jwt,
+		Email:    email,
+	}
+}
+
 func (s *AuthService) RequestMagicLink(emailAddr string) error {
 
 	// 1. Find user

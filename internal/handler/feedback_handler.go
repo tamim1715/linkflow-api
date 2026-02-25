@@ -6,42 +6,14 @@ import (
 	"net/http"
 )
 
-//type FeedbackHandler struct {
-//	Service *service.FeedbackService
-//}
-//
-//func (h *FeedbackHandler) Submit(w http.ResponseWriter, r *http.Request) {
-//
-//	userID := r.Context().Value(middleware.UserIDKey).(string)
-//
-//	var body struct {
-//		Message string `json:"message"`
-//	}
-//
-//	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-//		http.Error(w, "invalid body", 400)
-//		return
-//	}
-//
-//	if body.Message == "" {
-//		http.Error(w, "message required", 400)
-//		return
-//	}
-//
-//	if err := h.Service.Submit(userID, body.Message); err != nil {
-//		http.Error(w, "failed to save feedback", 500)
-//		return
-//	}
-//
-//	w.WriteHeader(http.StatusCreated)
-//}
-
 type FeedbackHandler struct {
 	Service *service.FeedbackService
 }
 
 func NewFeedbackHandler(s *service.FeedbackService) *FeedbackHandler {
-	return &FeedbackHandler{Service: s}
+	return &FeedbackHandler{
+		Service: s,
+	}
 }
 
 func (h *FeedbackHandler) Submit(c echo.Context) error {

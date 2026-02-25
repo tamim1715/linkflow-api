@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/tamim447/internal/constants"
 	"github.com/tamim447/internal/email"
 	"github.com/tamim447/internal/handler"
 	"github.com/tamim447/internal/middleware"
@@ -25,41 +26,31 @@ func NewServer(e *echo.Echo, db *mongo.Database) *Server {
 	userRepo := mongodb.NewMongoUserRepository(db)
 	feedbackRepo := mongodb.NewMongoFeedbackRepository(db)
 
+	tokenGen := service.NewTokenService()
+	emailSender := email.NewMockSender()
+	slackMockClient := slack.NewMockClient()
+
 	// Services
-	jwtService := service.NewJWTService("super-secret-key")
+	jwtService := service.NewJWTService(constants.SecretKey)
 
-	authService := &service.AuthService{
-		Users:    userRepo,
-		Tokens:   tokenRepo,
-		TokenGen: &service.TokenService{},
-		JWT:      jwtService,
-		Email:    &email.MockSender{},
-	}
+	authService := service.NewAuthService(
+		userRepo,
+		tokenRepo,
+		tokenGen,
+		jwtService,
+		emailSender,
+	)
 
-	feedbackService := &service.FeedbackService{
-		Repo:  feedbackRepo,
-		Slack: &slack.MockClient{},
-	}
-
-	//authService := service.AuthService(userRepo, tokenRepo, jwtService)
-	//feedbackService := service.NewFeedbackService(feedbackRepo)
+	feedbackService := service.NewFeedbackService(
+		feedbackRepo,
+		slackMockClient,
+	)
 
 	// Handlers
-	authHandler := &handler.AuthHandler{
-		Auth: authService,
-	}
-
-	feedbackHandler := &handler.FeedbackHandler{
-		Service: feedbackService,
-	}
-	//authHandler := handler.NewAuthHandler(authService)
-	//feedbackHandler := handler.NewFeedbackHandler(feedbackService)
+	authHandler := handler.NewAuthHandler(authService)
+	feedbackHandler := handler.NewFeedbackHandler(feedbackService)
 
 	// Middleware
-	//authMiddleware := &middleware.AuthMiddleware{
-	//	Secret: "super-secret-key",
-	//}
-
 	authMiddleware := middleware.NewAuthMiddleware(jwtService)
 
 	return &Server{

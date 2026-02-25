@@ -10,22 +10,11 @@ type AuthHandler struct {
 	Auth *service.AuthService
 }
 
-//func (h *AuthHandler) RequestLink(w http.ResponseWriter, r *http.Request) {
-//
-//	var body struct {
-//		Email string `json:"email"`
-//	}
-//
-//	json.NewDecoder(r.Body).Decode(&body)
-//
-//	err := h.Auth.RequestMagicLink(body.Email)
-//	if err != nil {
-//		http.Error(w, "failed to send link", 500)
-//		return
-//	}
-//
-//	w.WriteHeader(http.StatusOK)
-//}
+func NewAuthHandler(auth *service.AuthService) *AuthHandler {
+	return &AuthHandler{
+		Auth: auth,
+	}
+}
 
 func (h *AuthHandler) RequestLink(c echo.Context) error {
 
@@ -34,7 +23,7 @@ func (h *AuthHandler) RequestLink(c echo.Context) error {
 	}
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(400, map[string]string{"error": "invalid request"})
+		return c.JSON(400, map[string]string{"error": constants.InvalidRequest})
 	}
 
 	if err := h.Auth.RequestMagicLink(req.Email); err != nil {

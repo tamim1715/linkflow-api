@@ -8,6 +8,10 @@ import (
 
 type TokenService struct{}
 
+func NewTokenService() *TokenService {
+	return &TokenService{}
+}
+
 func (t *TokenService) Generate(userID string) *domain.MagicLinkToken {
 	return &domain.MagicLinkToken{
 		Token:     uuid.NewString(),

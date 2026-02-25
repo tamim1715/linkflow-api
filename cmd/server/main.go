@@ -9,63 +9,6 @@ import (
 	"github.com/tamim447/internal/database"
 )
 
-//func main() {
-//
-//	// 1️⃣ Database
-//	db, err := database.Connect("mongodb://localhost:27017", "linkflow")
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	// 2️⃣ Repositories
-//	userRepo := &mongoRepo.UserRepo{
-//		Collection: db.Collection("users"),
-//	}
-//
-//	tokenRepo := &mongoRepo.TokenRepo{
-//		Collection: db.Collection("magic_tokens"),
-//	}
-//
-//	feedbackRepo := &mongoRepo.FeedbackRepo{
-//		Collection: db.Collection("feedbacks"),
-//	}
-//
-//	authService := &service.AuthService{
-//		Users:    userRepo,
-//		Tokens:   tokenRepo,
-//		TokenGen: &service.TokenService{},
-//		JWT:      &service.JWTService{Secret: "supersecret"},
-//		Email:    &email.MockSender{},
-//	}
-//
-//	feedbackService := &service.FeedbackService{
-//		Repo:  feedbackRepo,
-//		Slack: &slack.MockClient{},
-//	}
-//
-//	authHandler := &handler.AuthHandler{
-//		Auth: authService,
-//	}
-//
-//	feedbackHandler := &handler.FeedbackHandler{
-//		Service: feedbackService,
-//	}
-//
-//	// Middleware
-//	authMiddleware := &middleware.AuthMiddleware{
-//		Secret: "supersecret",
-//	}
-//
-//	router := app.NewRouter(app.RouterDependencies{
-//		AuthHandler:     authHandler,
-//		FeedbackHandler: feedbackHandler,
-//		AuthMiddleware:  authMiddleware,
-//	})
-//
-//	log.Println("Server running on :8080")
-//	http.ListenAndServe(":8080", router)
-//}
-
 func main() {
 
 	cfg := config.Load()

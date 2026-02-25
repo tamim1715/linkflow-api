@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"github.com/google/uuid"
+	"github.com/tamim447/internal/constants"
 	"github.com/tamim447/internal/domain"
 	"github.com/tamim447/internal/repository"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,7 +16,7 @@ type UserRepo struct {
 
 func NewMongoUserRepository(db *mongo.Database) repository.UserRepository {
 	return &UserRepo{
-		Collection: db.Collection("users"),
+		Collection: db.Collection(constants.UserCollection),
 	}
 }
 
