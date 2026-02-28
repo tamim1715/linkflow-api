@@ -2,7 +2,8 @@
 
 Production-ready passwordless authentication service built with Go, Echo, and MongoDB.
 
-LinkFlow demonstrates secure Magic Link authentication, JWT-based authorization, abuse prevention, clean layered architecture, and containerized deployment.
+LinkFlow demonstrates secure Magic Link authentication, JWT-based authorization, abuse prevention, clean layered
+architecture, and containerized deployment.
 
 ---
 
@@ -51,7 +52,6 @@ The project emphasizes clarity, maintainability, and production-minded engineeri
 - TTL-based automatic token expiration
 - One active token per user (replay prevention)
 - Per-IP rate limiting on authentication endpoint
-- Graceful shutdown handling
 - Environment-based configuration
 - Multi-stage Docker build
 
@@ -94,7 +94,7 @@ Request:
 
 ```json
 {
-  "email": "shahadathhossain447@gmail.com"
+    "email": "shahadathhossain447@gmail.com"
 }
 ```
 
@@ -118,7 +118,7 @@ Response:
 
 ```json
 {
-  "token": "jwt-token"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzI4ODgzODksInVzZXJJZCI6ImViNDAzYjdmLTA3ZWYtNGE5Yi04MmZjLTFiNGVhY2I0YTQ1YyJ9.xB9ONWgclw0VvssCN3If4WqmQVdlIOlZ04JpW2NEEG4"
 }
 ```
 
@@ -143,7 +143,7 @@ Request:
 
 ```json
 {
-  "message": "Great system!"
+    "message": "Great system!, but feedback typing issue"
 }
 ```
 
@@ -157,7 +157,6 @@ Request:
 - Per-IP rate limiting on authentication endpoint
 - JWT-based stateless authentication
 - Secrets managed via environment variables
-- Graceful shutdown support
 - No password storage
 
 ---
@@ -192,10 +191,12 @@ Create `.env` file for development:
 ```
 APP_ENV=development
 SERVER_PORT=8080
-MONGODB_URI=mongodb://localhost:27017
-MONGODB_DATABASE=linkflow
+JWT_EXPIRES_HOURS=168
 JWT_SECRET=super-secret-key
-DEEP_LINK_BASE_URL=myapp://api/auth/verify
+MONGODB_DATABASE=linkflow
+MONGODB_URI=mongodb://localhost:27017
+VERIFY_TOKEN_URI=myapp://api/auth/verify
+
 ```
 
 In production, use system environment variables instead of `.env`.
@@ -258,23 +259,28 @@ The Dockerfile uses a multi-stage build to produce a minimal runtime image.
 ## Design Decisions
 
 Why Magic Link?
+
 - Eliminates password storage risks
 - Simplifies user onboarding
 
 Why JWT?
+
 - Stateless authentication
 - Scalable and infrastructure-friendly
 
 Why MongoDB TTL Index?
+
 - Automatic token cleanup
 - No background jobs required
 
 Why Manual Dependency Injection?
+
 - Explicit wiring
 - No framework lock-in
 - Better testability
 
 Why Rate Limiting Only on Auth?
+
 - Authentication endpoints are most vulnerable to abuse
 - Protects system resources
 
@@ -290,13 +296,6 @@ This project demonstrates:
 - Environment-driven configuration
 - Infrastructure isolation
 - Containerized deployment
-
-Suitable for:
-
-- Backend portfolio projects
-- Technical assessment submissions
-- Authentication service foundations
-- Interview discussions
 
 ---
 

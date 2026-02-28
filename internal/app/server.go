@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/tamim447/internal/constants"
+	"github.com/tamim447/internal/config"
 	"github.com/tamim447/internal/email"
 	"github.com/tamim447/internal/handler"
 	"github.com/tamim447/internal/middleware"
@@ -31,7 +31,7 @@ func NewServer(e *echo.Echo, db *mongo.Database) *Server {
 	slackMockClient := slack.NewMockClient()
 
 	// Services
-	jwtService := service.NewJWTService(constants.SecretKey)
+	jwtService := service.NewJWTService(config.JWTSecret)
 
 	authService := service.NewAuthService(
 		userRepo,

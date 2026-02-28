@@ -3,15 +3,16 @@ package mongodb
 import (
 	"context"
 	"errors"
+	"log"
+
 	"github.com/tamim447/internal/constants"
 	"github.com/tamim447/internal/domain"
 	"github.com/tamim447/internal/repository"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
 
-var ErrNotFound = errors.New("not found")
+var ErrNotFound = errors.New("token not found")
 
 type TokenRepo struct {
 	Collection *mongo.Collection
@@ -51,7 +52,7 @@ func (r *TokenRepo) Find(token string) (*domain.MagicLinkToken, error) {
 		constants.Token: token,
 	}).Decode(&doc)
 
-	if err == mongo.ErrNoDocuments {
+	if errors.Is(err, mongo.ErrNoDocuments) {
 		return nil, ErrNotFound
 	}
 

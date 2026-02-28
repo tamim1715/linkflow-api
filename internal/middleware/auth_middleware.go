@@ -1,16 +1,13 @@
 package middleware
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/labstack/echo/v4"
 	"github.com/tamim447/internal/constants"
 	"github.com/tamim447/internal/service"
-	"net/http"
-	"strings"
 )
-
-type contextKey string
-
-const UserIDKey contextKey = "userId"
 
 type AuthMiddleware struct {
 	JWT *service.JWTService
@@ -38,7 +35,7 @@ func (m *AuthMiddleware) RequireJWT(next echo.HandlerFunc) echo.HandlerFunc {
 				map[string]string{constants.Error: constants.ErrInvalidToken})
 		}
 
-		c.Set("userID", userID)
+		c.Set(constants.ContextUserID, userID)
 
 		return next(c)
 	}

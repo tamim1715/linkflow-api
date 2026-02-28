@@ -11,28 +11,28 @@ import (
 
 func main() {
 
-	cfg := config.Load()
+	config.LoadEnv()
 
-	// 1️⃣ Database Connection
-	db, err := database.Connect(cfg.MongoURI, cfg.MongoDatabase)
+	// Database Connection
+	db, err := database.Connect(config.MongoURI, config.MongoDatabase)
 	if err != nil {
 		log.Fatal("failed to connect database:", err)
 	}
 
-	// 2️⃣ Create Echo instance
+	// Create Echo instance
 	e := echo.New()
 
-	// 3️⃣ Global Middleware
+	// Global Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 
-	// 4️⃣ Create Server with dependencies
+	// Create Server with dependencies
 	server := app.NewServer(e, db)
 
-	// 5️⃣ Register routes
+	// Register routes
 	server.RegisterRoutes()
 
-	// 6️⃣ Start server
-	e.Logger.Fatal(e.Start(":8080"))
+	// Start server
+	e.Logger.Fatal(e.Start(":" + config.ServerPort))
 }

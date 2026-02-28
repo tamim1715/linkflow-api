@@ -1,12 +1,13 @@
 package middleware
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/tamim447/internal/constants"
 	"net"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/labstack/echo/v4"
+	"github.com/tamim447/internal/constants"
 )
 
 type client struct {
@@ -49,7 +50,7 @@ func AuthRateLimiter() echo.MiddlewareFunc {
 
 			if cl.count >= constants.AuthRateLimitRequests {
 				return c.JSON(http.StatusTooManyRequests, map[string]string{
-					"error": "too many requests, please try again later",
+					constants.Error: constants.TooManyRequests,
 				})
 			}
 

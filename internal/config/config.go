@@ -1,45 +1,35 @@
 package config
 
 import (
-	"github.com/joho/godotenv"
 	"log"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
-type Config struct {
-	AppName        string
-	AppEnv         string
-	ServerPort     string
-	MongoURI       string
-	MongoDatabase  string
-	JWTSecret      string
-	JWTExpireHours string
-}
+var AppEnv = ""
+var ServerPort string
+var MongoURI string
+var MongoDatabase string
+var JWTSecret string
+var JWTExpireHours string
+var VerifyTokenURI string
 
-func Load() *Config {
+func LoadEnv() {
 
+	AppEnv = os.Getenv("APP_ENV")
 	// Load .env only in development
-	if os.Getenv("APP_ENV") != "production" {
+	if AppEnv != "production" {
+		log.Println("not production")
 		err := godotenv.Load()
 		if err != nil {
 			log.Println(".env file not found")
 		}
 	}
-
-	return &Config{
-		AppName:        getEnv("APP_NAME", "LinkFlow"),
-		AppEnv:         getEnv("APP_ENV", "development"),
-		ServerPort:     getEnv("SERVER_PORT", "8080"),
-		MongoURI:       getEnv("MONGODB_URI", ""),
-		MongoDatabase:  getEnv("MONGODB_DATABASE", ""),
-		JWTSecret:      getEnv("JWT_SECRET", ""),
-		JWTExpireHours: getEnv("JWT_EXPIRES_HOURS", "168"),
-	}
-}
-
-func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
+	ServerPort = os.Getenv("SERVER_PORT")
+	MongoURI = os.Getenv("MONGODB_URI")
+	MongoDatabase = os.Getenv("MONGODB_DATABASE")
+	JWTSecret = os.Getenv("JWT_SECRET")
+	JWTExpireHours = os.Getenv("JWT_EXPIRE_HOURS")
+	VerifyTokenURI = os.Getenv("VERIFY_TOKEN_URI")
 }

@@ -23,14 +23,14 @@ func (h *AuthHandler) RequestLink(c echo.Context) error {
 	}
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(400, map[string]string{"error": constants.InvalidRequest})
+		return c.JSON(400, map[string]string{constants.Error: constants.InvalidRequest})
 	}
 
 	if err := h.Auth.RequestMagicLink(req.Email); err != nil {
-		return c.JSON(500, map[string]string{"error": err.Error()})
+		return c.JSON(500, map[string]string{constants.Error: err.Error()})
 	}
 
-	return c.JSON(200, map[string]string{"message": "magic link sent"})
+	return c.JSON(200, map[string]string{constants.Message: constants.MagicLinkSent})
 }
 
 func (h *AuthHandler) Verify(c echo.Context) error {
@@ -39,7 +39,7 @@ func (h *AuthHandler) Verify(c echo.Context) error {
 
 	jwtToken, err := h.Auth.Verify(token)
 	if err != nil {
-		return c.JSON(401, map[string]string{"error": err.Error()})
+		return c.JSON(401, map[string]string{constants.Error: err.Error()})
 	}
 
 	return c.JSON(200, map[string]string{constants.Token: jwtToken})

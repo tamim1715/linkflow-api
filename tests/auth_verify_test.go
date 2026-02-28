@@ -1,15 +1,21 @@
 package tests
 
 import (
+	"testing"
+	"time"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/tamim447/internal/domain"
 	"github.com/tamim447/internal/service"
-	"testing"
-	"time"
 )
 
 type FakeTokenRepo struct {
 	Token *domain.MagicLinkToken
+}
+
+func (f *FakeTokenRepo) InvalidateUserTokens(userID string) error {
+	f.Token.Used = true
+	return nil
 }
 
 func (f *FakeTokenRepo) Save(token *domain.MagicLinkToken) error {

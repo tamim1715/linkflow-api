@@ -1,25 +1,12 @@
 package service
 
 import (
-	"github.com/golang-jwt/jwt/v5"
+	"strconv"
 	"time"
-)
 
-//type JWTService struct {
-//	Secret string
-//}
-//
-//func (j *JWTService) Generate(userID string) (string, error) {
-//
-//	claims := jwt.MapClaims{
-//		"userId": userID,
-//		"exp":    time.Now().Add(7 * 24 * time.Hour).Unix(),
-//	}
-//
-//	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-//
-//	return token.SignedString([]byte(j.Secret))
-//}
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/tamim447/internal/config"
+)
 
 type JWTService struct {
 	Secret string
@@ -33,9 +20,14 @@ func NewJWTService(secret string) *JWTService {
 
 func (j *JWTService) Generate(userID string) (string, error) {
 
+	expireHour, err := strconv.Atoi(config.JWTExpireHours)
+	if err != nil {
+		expireHour = 7 * 24
+	}
+
 	claims := jwt.MapClaims{
 		"userId": userID,
-		"exp":    time.Now().Add(7 * 24 * time.Hour).Unix(),
+		"exp":    time.Now().Add(time.Duration(expireHour) * time.Hour).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

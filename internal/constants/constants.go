@@ -3,8 +3,6 @@ package constants
 import "time"
 
 const (
-	AppName = "LinkFlow"
-
 	MagicLinkTokenCollection = "magic_link_tokens"
 	FeedbackCollection       = "feedbacks"
 	UserCollection           = "users"
@@ -12,11 +10,16 @@ const (
 	AuthorizationHeader = "Authorization"
 	BearerPrefix        = "Bearer "
 
-	ContextUserID = "userID"
+	ErrInvalidToken     = "invalid token"
+	ErrMissingToken     = "missing token"
+	InvalidRequest      = "invalid request"
+	InvalidEmailAddress = "invalid email address"
+	TokenAlreadyUsed    = "token already used"
+	TokenExpired        = "token expired"
+	TooManyRequests     = "too many requests, please try again later"
 
-	ErrInvalidToken = "invalid token"
-	ErrMissingToken = "missing token"
-	InvalidRequest  = "invalid request"
+	MagicLinkSent     = "magic link sent"
+	FeedbackSubmitted = "feedback submitted"
 
 	APIPrefix         = "/api"
 	AuthPrefix        = "/auth"
@@ -24,11 +27,11 @@ const (
 	FeedbackPrefix    = "/feedback"
 	RequestLinkPrefix = "/request-link"
 
-	Token = "token"
-
 	AuthRateLimitRequests = 5
 	AuthRateLimitWindow   = time.Minute // minutes
 
-	Error     = "error"
-	SecretKey = "super-secret-key"
+	Token         = "token"
+	Error         = "error"
+	Message       = "message"
+	ContextUserID = "userID"
 )

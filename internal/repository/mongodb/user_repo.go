@@ -2,12 +2,14 @@ package mongodb
 
 import (
 	"context"
+	"errors"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/tamim447/internal/constants"
 	"github.com/tamim447/internal/domain"
 	"github.com/tamim447/internal/repository"
 	"go.mongodb.org/mongo-driver/mongo"
-	"time"
 )
 
 type UserRepo struct {
@@ -30,7 +32,7 @@ func (r *UserRepo) FindByEmail(email string) (*domain.User, error) {
 		"email": email,
 	}).Decode(&doc)
 
-	if err == mongo.ErrNoDocuments {
+	if errors.Is(err, mongo.ErrNoDocuments) {
 		return nil, repository.ErrNotFound
 	}
 

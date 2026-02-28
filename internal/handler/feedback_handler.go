@@ -1,9 +1,11 @@
 package handler
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/tamim447/internal/service"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
+	"github.com/tamim447/internal/constants"
+	"github.com/tamim447/internal/service"
 )
 
 type FeedbackHandler struct {
@@ -24,16 +26,16 @@ func (h *FeedbackHandler) Submit(c echo.Context) error {
 
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest,
-			map[string]string{"error": "invalid request"})
+			map[string]string{constants.Error: constants.InvalidRequest})
 	}
 
-	userID := c.Get("userID").(string)
+	userID := c.Get(constants.ContextUserID).(string)
 
 	if err := h.Service.Submit(userID, req.Message); err != nil {
 		return c.JSON(http.StatusInternalServerError,
-			map[string]string{"error": err.Error()})
+			map[string]string{constants.Error: err.Error()})
 	}
 
 	return c.JSON(http.StatusCreated,
-		map[string]string{"message": "feedback submitted"})
+		map[string]string{constants.Message: constants.FeedbackSubmitted})
 }
