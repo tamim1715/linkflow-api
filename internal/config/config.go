@@ -20,7 +20,6 @@ func LoadEnv() {
 	AppEnv = os.Getenv("APP_ENV")
 	// Load .env only in development
 	if AppEnv != "production" {
-		log.Println("not production")
 		err := godotenv.Load()
 		if err != nil {
 			log.Println(".env file not found")
